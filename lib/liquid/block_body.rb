@@ -88,7 +88,7 @@ module Liquid
           node_output = render_node(token, context)
 
           unless token.is_a?(Block) && token.blank?
-            output << node_output.to_s.force_encoding('ASCII-8BIT')
+            output << node_output
           end
         rescue MemoryError => e
           raise e
@@ -107,7 +107,7 @@ module Liquid
 
     def render_node(node, context)
       node_output = (node.respond_to?(:render) ? node.render(context) : node)
-      node_output = node_output.is_a?(Array) ? node_output.join : node_output.to_s
+      node_output = node_output.is_a?(Array) ? node_output.map{|e| e.to_s.force_encoding('UTF-8')}.join : node_output.to_s.force_encoding('UTF-8')
 
       context.resource_limits.render_length += node_output.length
       if context.resource_limits.reached?
