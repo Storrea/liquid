@@ -88,7 +88,7 @@ module Liquid
           node_output = render_node(token, context)
 
           unless token.is_a?(Block) && token.blank?
-            output << node_output
+            output << node_output.force_encoding('ASCII-8BIT')
           end
         rescue MemoryError => e
           raise e
