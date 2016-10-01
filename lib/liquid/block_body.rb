@@ -2,8 +2,8 @@ module Liquid
   class BlockBody
     FullToken = /\A#{TagStart}#{WhitespaceControl}?\s*(\w+)\s*(.*?)#{WhitespaceControl}?#{TagEnd}\z/om
     ContentOfVariable = /\A#{VariableStart}#{WhitespaceControl}?(.*?)#{WhitespaceControl}?#{VariableEnd}\z/om
-    TAGSTART = "{%".freeze
-    VARSTART = "{{".freeze
+    TAGSTART = "{%"
+    VARSTART = "{{"
 
     attr_reader :nodelist
 
@@ -107,7 +107,7 @@ module Liquid
 
     def render_node(node, context)
       node_output = (node.respond_to?(:render) ? node.render(context) : node)
-      node_output = node_output.is_a?(Array) ? node_output.join : node_output.to_s
+      node_output = node_output.is_a?(Array) ? node_output.map{|e| e.to_s.force_encoding('ASCII-8BIT')}.join : node_output.to_s.force_encoding('ASCII-8BIT')
 
       context.resource_limits.render_length += node_output.length
       if context.resource_limits.reached?
