@@ -87,10 +87,10 @@ module Liquid
     def load_cached_partial(template_name, context)
       cached_partials = context.registers[:cached_partials] || {}
 
-      #if cached = cached_partials[template_name]
-      #  return cached
-      #end
-      source = context.registers[:cached_partials][template_name]
+      if cached = cached_partials[template_name]
+        return cached
+      end
+      source = context.registers[:partials][template_name]
       begin
         parse_context.partial = true
         partial = Liquid::Template.parse(source, parse_context)
